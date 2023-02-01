@@ -16,7 +16,7 @@ def get_kurs() -> True:  # Получаем курс валют
             file.write(r)
         return True
     except:
-        raise Exception('Сервер не доступен')
+        Exception('Сервер не доступен')
 
 
 def chek_time_kurs() -> True:
@@ -43,17 +43,17 @@ def chek_valuta(valuta: str) -> str or False:
     return False
 
 
-def chek_user(dlina: int, cifra: str) -> True or str:
+def chek_user(dlina: int, cifra: str) -> bool:
     if dlina != 3:
-        return 'Неправильно написано, посмотрите тут: /help'
-    elif cifra.isdigit():
-        return 'Что-то не то с цифрой'
+        return False
+    elif not cifra.isnumeric():
+        return False
     else:
         return True
 
 
 def text_for_user(vy: str, vs: str, coin: str) -> str:
-    vy_ch, vs_ch, = chek_valuta(vy), chek_valuta(vs)
+    vy_ch, vs_ch = chek_valuta(vy), chek_valuta(vs)
     coin = float(coin.replace(',', '.'))
     if vs_ch == 'RU':
         vy_j = file_json['Valute'][vy_ch]['Value']
@@ -96,9 +96,11 @@ def ask_valuta(message):
     list_text = message.text.split(' ')
 
     if not chek_user(len(list_text), list_text[2]):
-        bot.send_message(message.chat.id, 'упс')
-    text = text_for_user(*list_text)
-    bot.send_message(message.chat.id, text)
+        text = 'Что-то не то с цифрой'
+        bot.send_message(message.chat.id, text)
+    else:
+        text = text_for_user(*list_text)
+        bot.send_message(message.chat.id, text)
 
 
 bot.polling(none_stop=True)
