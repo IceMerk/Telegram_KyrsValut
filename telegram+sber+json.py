@@ -53,19 +53,22 @@ def chek_user(dlina: int, cifra: str) -> bool:
 
 
 def text_for_user(vy: str, vs: str, coin: str) -> str:
-    vy_ch, vs_ch = chek_valuta(vy), chek_valuta(vs)
     coin = float(coin.replace(',', '.'))
-    if vs_ch == 'RU':
-        vy_j = file_json['Valute'][vy_ch]['Value']
-        return f'{vy} в переводе на {vs} равен {round(vy_j * coin, 2)}'
-    elif vy_ch == 'RU':
-        vs_j = file_json['Valute'][vs_ch]['Value']
-        return f'{vy} в переводе на {vs} равен {round(vs_j * coin, 2)}'
+    vy_ch, vs_ch = chek_valuta(vy), chek_valuta(vs)
+    if vy_ch and vs_ch:
+        if vs_ch == 'RU':
+            vy_j = file_json['Valute'][vy_ch]['Value']
+            return f'{vy} в переводе на {vs} равен {round(vy_j * coin, 2)}'
+        elif vy_ch == 'RU':
+            vs_j = file_json['Valute'][vs_ch]['Value']
+            return f'{vy} в переводе на {vs} равен {round(vs_j * coin, 2)}'
+        elif vy_ch != 'RU' and vs_ch != 'RU':
+            vy_j, vs_j = file_json['Valute'][vy_ch]['Value'], file_json['Valute'][vs_ch]['Value']
+            if vy_j > vs_j:
+                return f'{vy} в переводе на {vs} равен {round((vy_j - vs_j) * coin, 2)}'
+            return f'{vy} в переводе на {vs} равен {round((vs_j - vy_j) * coin, 2)}'
     else:
-        vy_j, vs_j = file_json['Valute'][vy_ch]['Value'], file_json['Valute'][vs_ch]['Value']
-        if vy_j > vs_j:
-            return f'{vy} в переводе на {vs} равен {round((vy_j - vs_j) * coin, 2)}'
-        return f'{vy} в переводе на {vs} равен {round((vs_j - vy_j) * coin, 2)}'
+        return f'Такой валюты ещё нет. Доступные валюты: /values'
 
 
 @bot.message_handler(commands=['start', 'help'])
