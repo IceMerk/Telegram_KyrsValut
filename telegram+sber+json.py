@@ -75,20 +75,21 @@ def chek_user(cifra: str) -> bool:  # Проверяем на цифру
 
 
 def text_for_user(vy: str, vs: str, coin: str) -> str:  # Печатает текст для пользователя
-    coin = float(coin.replace(',', '.'))  # Редактируем цифру, чтобы умножить
+    coin_ch = float(coin.replace(',', '.'))  # Редактируем цифру, чтобы умножить
     vy_ch, vs_ch = chek_valuta(vy.lower()), chek_valuta(vs.lower())  # Сверяем в валютах и присваеваем нужный знак
     if vy_ch and vs_ch:  # Если не False
-        if vs_ch == 'RU':  # В jsone нет рублей, поэтому отдельная проверка на первую валюту
-            vy_j = file_json['Valute'][vy_ch]['Value']
-            return f'{vy} в переводе на {vs} равен {round(vy_j * coin, 2)}'
-        elif vy_ch == 'RU':  # на вторую валюту
+
+        if vy_ch == 'RU':  # В jsone нет рублей, поэтому отдельная проверка на первую валюту
             vs_j = file_json['Valute'][vs_ch]['Value']
-            return f'{vy} в переводе на {vs} равен {round(vs_j * coin, 2)}'
-        elif vy_ch != 'RU' and vs_ch != 'RU':  # Иначе считаем с нужными
+            return f'{coin} {vy} = {round(coin_ch/vs_j, 3)} {vs}'
+        elif vs_ch == 'RU':  # на вторую валюту
+            vy_j = file_json['Valute'][vy_ch]['Value']
+            return f'{coin} {vy} = {round(vy_j*coin_ch, 3)} {vs}'
+
+        else:  # Иначе считаем с нужными
             vy_j, vs_j = file_json['Valute'][vy_ch]['Value'], file_json['Valute'][vs_ch]['Value']
-            if vy_j > vs_j:
-                return f'{vy} в переводе на {vs} равен {round((vy_j - vs_j) * coin, 2)}'
-            return f'{vy} в переводе на {vs} равен {round((vs_j - vy_j) * coin, 2)}'
+            return f'{coin} {vy} = {round((vy_j/vs_j)*coin_ch, 3)} {vs}'
+
     else:  # Если проверки валют не прошли
         return f'Такой валюты ещё нет. 🙄 Доступные валюты👉 /values'
 
