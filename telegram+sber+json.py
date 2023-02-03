@@ -46,16 +46,16 @@ def chek_time_kurs() -> True:  # Фунция сверки дня, если на
     return True
 
 
-def chek_valuta(valuta: str) -> str or False:  # Сверяем запросы валют и присваеваем как в json
-    kurs = {
+def chek_valuta(kurs: str) -> str or False:  # Сверяем запросы валют и присваеваем как в json
+    valuta = {
         'USD': ['доллар', 'usd', 'зеленый', 'бакс', 'долар'],
         'RUB': ['рубль', 'ru', 'деревянный', 'рупь', 'целковый'],
         'CNY': ['юань', 'cny', 'китайских'],
         'EUR': ['евро'],
     }
-    for key, val in kurs.items():
+    for key, val in valuta.items():
         for x in val:
-            if valuta[:3] in x:
+            if kurs[:3] in x:
                 return key
     return False
 
