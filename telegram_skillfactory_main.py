@@ -43,8 +43,8 @@ def start_help(message):
 @bot.message_handler(commands=['values'])  # Смотрим что можем считать в валютах
 def values(message):
     text = 'Доступные валюты: '
-    for k in valuta.keys():
-        text += f'\n{k}'
+    for k in valuta.values():
+        text += f'\n{k[0]}'
     bot.send_message(message.chat.id, text)
 
 
